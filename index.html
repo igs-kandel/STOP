@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stoppuhr</title>
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        background:#f4f6f8;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        margin:0;
+    }
+    .card{
+        background:white;
+        padding:40px;
+        border-radius:20px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.15);
+        text-align:center;
+        width:320px;
+    }
+    .time{
+        font-size:48px;
+        margin-bottom:25px;
+        font-weight:bold;
+    }
+    button{
+        font-size:18px;
+        padding:12px 20px;
+        margin:8px;
+        border:none;
+        border-radius:10px;
+        cursor:pointer;
+    }
+    .start{background:#4CAF50;color:white;}
+    .stop{background:#e53935;color:white;}
+    .reset{background:#607d8b;color:white;}
+    .result{
+        margin-top:25px;
+        font-size:20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+    <div class="time" id="display">0</div>
+
+    <button class="start" onclick="startTimer()">Start</button>
+    <button class="stop" onclick="stopTimer()">Stop</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+let startTime = 0;
+let interval = null;
+let runCount = 0;
+let decimals = 0;
+
+function startTimer(){
+
+    if(interval) return;
+
+    runCount++;
+
+    if(runCount === 1){
+        decimals = 0;
+    } else {
+        decimals = 2;
+    }
+
+    startTime = performance.now();
+
+    interval = setInterval(()=>{
+
+        let elapsed = (performance.now() - startTime)/1000;
+
+        if(decimals === 0){
+            document.getElementById("display").textContent =
+            Math.floor(elapsed);
+        } else {
+            document.getElementById("display").textContent =
+            elapsed.toFixed(2).replace(".", ",");
+        }
+
+    },10);
+}
+
+function stopTimer(){
+
+    if(!interval) return;
+
+    clearInterval(interval);
+    interval = null;
+
+    let finalTime = document.getElementById("display").textContent;
+
+    document.getElementById("result").textContent =
+    "Gemessene Zeit: " + finalTime + " s";
+}
+
+function resetTimer(){
+
+    clearInterval(interval);
+    interval = null;
+
+    startTime = 0;
+    runCount = 0;
+
+    document.getElementById("display").textContent = "0";
+    document.getElementById("result").textContent = "";
+}
+</script>
+
+</body>
+</html>
